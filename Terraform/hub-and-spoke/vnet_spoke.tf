@@ -15,3 +15,13 @@ resource "azurerm_subnet" "servernet" {
   resource_group_name  = "${azurerm_resource_group.net-spoke.name}"
   virtual_network_name = "${azurerm_virtual_network.spoke.name}"
 }
+
+##### PEERING
+
+resource "azurerm_virtual_network_peering" "spoke-to-core" {
+  name                         = "spoke-to-core"
+  resource_group_name          = "${azurerm_resource_group.net-spoke.name}"
+  virtual_network_name         = "${azurerm_virtual_network.spoke.name}"
+  remote_virtual_network_id    = "${azurerm_virtual_network.core.id}"
+  allow_virtual_network_access = true
+}

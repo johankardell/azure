@@ -43,3 +43,13 @@ resource "azurerm_network_security_group" "jumpnet" {
     destination_address_prefix = "*"
   }
 }
+
+##### PEERING
+
+resource "azurerm_virtual_network_peering" "core-to-spoke" {
+  name                         = "core-to-spoke"
+  resource_group_name          = "${azurerm_resource_group.net-core.name}"
+  virtual_network_name         = "${azurerm_virtual_network.core.name}"
+  remote_virtual_network_id    = "${azurerm_virtual_network.spoke.id}"
+  allow_virtual_network_access = true
+}
