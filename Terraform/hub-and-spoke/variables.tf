@@ -18,3 +18,7 @@ variable "vnet_core" {
 variable "vnet_core_server" {
     type = "map"
 }
+
+variable "jumphost" {
+    type = "map"
+}

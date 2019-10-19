@@ -1,10 +1,3 @@
-resource "azurerm_public_ip" "coreserver" {
-  name                = "${var.vnet_core_server.publicipname}"
-  location            = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.core-server.name}"
-  allocation_method   = "Dynamic"
-}
-
 resource "azurerm_network_interface" "coreserver" {
   name                = "${var.vnet_core_server.nicname}"
   location            = "${var.location}"
@@ -14,7 +7,6 @@ resource "azurerm_network_interface" "coreserver" {
     name                          = "ipconfiguration"
     subnet_id                     = "${azurerm_subnet.servernet.id}"
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.coreserver.id}"
   }
 }
 
