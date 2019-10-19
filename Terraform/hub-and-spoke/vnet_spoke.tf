@@ -18,10 +18,10 @@ resource "azurerm_subnet" "spoke-servernet" {
 
 ##### PEERING
 
-resource "azurerm_virtual_network_peering" "spoke-to-core" {
-  name                         = "spoke-to-core"
+resource "azurerm_virtual_network_peering" "spoke-to-hub" {
+  name                         = "spoke-to-hub"
   resource_group_name          = "${azurerm_resource_group.net-spoke.name}"
   virtual_network_name         = "${azurerm_virtual_network.spoke.name}"
-  remote_virtual_network_id    = "${azurerm_virtual_network.core.id}"
+  remote_virtual_network_id    = "${azurerm_virtual_network.hub.id}"
   allow_virtual_network_access = true
 }

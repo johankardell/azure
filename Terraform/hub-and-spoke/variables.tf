@@ -11,7 +11,7 @@ variable "resourcegroups" {
   type = "map"
 }
 
-variable "vnet_core" {
+variable "vnet_hub" {
     type = "map"
 }
 
@@ -19,7 +19,7 @@ variable "vnet_spoke" {
     type = "map"
 }
 
-variable "vnet_core_server" {
+variable "vnet_hub_server" {
     type = "map"
 }
 

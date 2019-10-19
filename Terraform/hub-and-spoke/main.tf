@@ -2,8 +2,8 @@ provider "azurerm" {
   version = "=1.35.0"
 }
 
-resource "azurerm_resource_group" "net-core" {
-  name     = "${var.resourcegroups.net-core}"
+resource "azurerm_resource_group" "net-hub" {
+  name     = "${var.resourcegroups.net-hub}"
   location = "${var.location}"
 }
 
@@ -17,8 +17,8 @@ resource "azurerm_resource_group" "jumphost" {
   location = "${var.location}"
 }
 
-resource "azurerm_resource_group" "core-server" {
-  name     = "${var.resourcegroups.core-server}"
+resource "azurerm_resource_group" "hub-server" {
+  name     = "${var.resourcegroups.hub-server}"
   location = "${var.location}"
 }
 

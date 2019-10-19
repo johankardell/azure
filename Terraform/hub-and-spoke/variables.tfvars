@@ -1,13 +1,13 @@
 resourcegroups = {
-  net-core     = "Network-Infrastructure-CORE"
+  net-hub     = "Network-Infrastructure-HUB"
   net-spoke    = "Network-Infrastructure-SPOKE"
-  core-server  = "TestServer-CORE"
-  jumphost     = "JumpServer-CORE"
+  hub-server  = "TestServer-HUB"
+  jumphost     = "JumpServer-HUB"
   spoke-server = "TestServer-SPOKE"
 }
 
-vnet_core = {
-  name    = "vnet-core"
+vnet_hub = {
+  name    = "vnet-hub"
   iprange = "10.0.0.0/16"
 
   subnet_jumpnet_name    = "subnet-jumpnet"
@@ -18,20 +18,20 @@ vnet_core = {
 }
 
 vnet_spoke = {
-  name    = "vnet-core"
+  name    = "vnet-hub"
   iprange = "10.1.0.0/16"
 
   subnet_servernet_name    = "subnet-servernet"
   subnet_servernet_iprange = "10.1.0.0/24"
 }
 
-vnet_core_server = {
-  nicname = "nic-core-server"
+vnet_hub_server = {
+  nicname = "nic-hub-server"
 
-  vm_name       = "coreserver"
-  computer_name = "coreserver"
+  vm_name       = "hubserver"
+  computer_name = "hubserver"
   vmsize        = "Standard_B2ms"
-  osdisk_name   = "osdisk-core-server"
+  osdisk_name   = "osdisk-hub-server"
 
   admin_username = "azureuser"
   admin_password = "do_no_commit_passwords_to_git1234!"
