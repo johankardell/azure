@@ -3,6 +3,10 @@ variable "location" {
   default     = "westeurope"
 }
 
+variable "home_ip" {
+  description = "Current IP - Open NSG for this IP"
+}
+
 variable "resourcegroups" {
   type = "map"
 }
