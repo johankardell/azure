@@ -30,3 +30,11 @@ variable "vnet_spoke_server" {
 variable "jumphost" {
     type = "map"
 }
+
+variable "automationaccount" {
+    type = "map"
+}
+
+variable "loganalytics" {
+    type = "map"
+}

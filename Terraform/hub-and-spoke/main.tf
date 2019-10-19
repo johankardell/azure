@@ -2,6 +2,16 @@ provider "azurerm" {
   version = "=1.35.0"
 }
 
+resource "azurerm_resource_group" "loganalytics" {
+  name     = "${var.resourcegroups.loganalytics}"
+  location = "${var.location}"
+}
+
+resource "azurerm_resource_group" "automationaccount" {
+  name     = "${var.resourcegroups.automationaccount}"
+  location = "${var.location}"
+}
+
 resource "azurerm_resource_group" "net-hub" {
   name     = "${var.resourcegroups.net-hub}"
   location = "${var.location}"

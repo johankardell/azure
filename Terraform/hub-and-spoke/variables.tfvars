@@ -1,9 +1,11 @@
 resourcegroups = {
-  net-hub     = "Network-Infrastructure-HUB"
-  net-spoke    = "Network-Infrastructure-SPOKE"
-  hub-server  = "TestServer-HUB"
-  jumphost     = "JumpServer-HUB"
-  spoke-server = "TestServer-SPOKE"
+  net-hub           = "Network-Infrastructure-HUB"
+  net-spoke         = "Network-Infrastructure-SPOKE"
+  hub-server        = "TestServer-HUB"
+  jumphost          = "JumpServer-HUB"
+  spoke-server      = "TestServer-SPOKE"
+  automationaccount = "Automation"
+  loganalytics      = "LogAnalytics"
 }
 
 vnet_hub = {
@@ -60,4 +62,12 @@ jumphost = {
 
   admin_username = "azureuser"
   admin_password = "do_no_commit_passwords_to_git1234!"
+}
+
+automationaccount = {
+  name = "automationaccount"
+}
+
+loganalytics = {
+  name = "log-analytics-workspace"
 }
