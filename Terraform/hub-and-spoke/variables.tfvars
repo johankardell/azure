@@ -69,5 +69,5 @@ automationaccount = {
 }
 
 loganalytics = {
-  name = "log-analytics-workspace"
+  name = "log-analytics-workspace90210"
 }
