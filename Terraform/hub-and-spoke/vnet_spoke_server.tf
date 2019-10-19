@@ -5,7 +5,7 @@ resource "azurerm_network_interface" "spokeserver" {
 
   ip_configuration {
     name                          = "ipconfiguration"
-    subnet_id                     = "${azurerm_subnet.servernet.id}"
+    subnet_id                     = "${azurerm_subnet.spoke-servernet.id}"
     private_ip_address_allocation = "dynamic"
   }
 }

@@ -5,7 +5,7 @@ resource "azurerm_network_interface" "coreserver" {
 
   ip_configuration {
     name                          = "ipconfiguration"
-    subnet_id                     = "${azurerm_subnet.coreservernet.id}"
+    subnet_id                     = "${azurerm_subnet.core-servernet.id}"
     private_ip_address_allocation = "dynamic"
   }
 }
