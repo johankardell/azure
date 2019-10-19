@@ -18,7 +18,7 @@ resource "azurerm_subnet" "jumpnet" {
 }
 
 resource "azurerm_subnet" "hub-servernet" {
-  name                 = "${var.hub.subnet_servernet_name}"
+  name                 = "${var.vnet_hub.subnet_servernet_name}"
   address_prefix       = "${var.vnet_hub.subnet_servernet_iprange}"
   resource_group_name  = "${azurerm_resource_group.net-hub.name}"
   virtual_network_name = "${azurerm_virtual_network.hub.name}"
