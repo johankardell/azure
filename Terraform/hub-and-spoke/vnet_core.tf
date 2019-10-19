@@ -17,7 +17,7 @@ resource "azurerm_subnet" "jumpnet" {
   network_security_group_id = "${azurerm_network_security_group.jumpnet.id}"
 }
 
-resource "azurerm_subnet" "servernet" {
+resource "azurerm_subnet" "coreservernet" {
   name                 = "${var.vnet_core.subnet_servernet_name}"
   address_prefix       = "${var.vnet_core.subnet_servernet_iprange}"
   resource_group_name  = "${azurerm_resource_group.net-core.name}"

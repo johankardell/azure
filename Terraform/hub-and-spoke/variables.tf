@@ -15,7 +15,15 @@ variable "vnet_core" {
     type = "map"
 }
 
+variable "vnet_spoke" {
+    type = "map"
+}
+
 variable "vnet_core_server" {
+    type = "map"
+}
+
+variable "vnet_spoke_server" {
     type = "map"
 }
 
