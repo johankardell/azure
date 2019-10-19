@@ -6,3 +6,8 @@ variable "location" {
 variable "resourcegroups" {
   type = "map"
 }
+
+variable "vnet_core" {
+    type = "map"
+}
+
