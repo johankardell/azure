@@ -7,3 +7,4 @@ sudo apt autoremove -y
 sudo apt install inetutils-traceroute -y
 sudo apt install tcptraceroute -y
 sudo apt install tcpdump -y
+sudo apt install hping3 -y
