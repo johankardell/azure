@@ -22,6 +22,9 @@ variable "vnet_spoke" {
 variable "vnet_hub_server" {
     type = "map"
 }
+variable "vnet_hub_server_2" {
+    type = "map"
+}
 
 variable "vnet_spoke_server" {
     type = "map"

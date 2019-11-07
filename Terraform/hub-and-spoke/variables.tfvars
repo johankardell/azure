@@ -2,6 +2,7 @@ resourcegroups = {
   net-hub           = "Network-Infrastructure-HUB"
   net-spoke         = "Network-Infrastructure-SPOKE"
   hub-server        = "TestServer-HUB"
+  hub-server-2      = "TestServer-HUB-2"
   jumphost          = "JumpServer-HUB"
   spoke-server      = "TestServer-SPOKE"
   automationaccount = "Automation"
@@ -20,7 +21,7 @@ vnet_hub = {
 }
 
 vnet_spoke = {
-  name    = "vnet-hub"
+  name    = "vnet-spoke-1"
   iprange = "10.1.0.0/16"
 
   subnet_servernet_name    = "subnet-servernet"
@@ -32,6 +33,18 @@ vnet_hub_server = {
 
   vm_name       = "hubserver"
   computer_name = "hubserver"
+  vmsize        = "Standard_B2ms"
+  osdisk_name   = "osdisk-hub-server"
+
+  admin_username = "azureuser"
+  admin_password = "do_no_commit_passwords_to_git1234!"
+}
+
+vnet_hub_server_2 = {
+  nicname = "nic-hub-server-2"
+
+  vm_name       = "hubserver2"
+  computer_name = "hubserver2"
   vmsize        = "Standard_B2ms"
   osdisk_name   = "osdisk-hub-server"
 

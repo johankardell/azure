@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "=1.35.0"
+  version = "=1.36.0"
 }
 
 resource "azurerm_resource_group" "loganalytics" {
@@ -29,6 +29,11 @@ resource "azurerm_resource_group" "jumphost" {
 
 resource "azurerm_resource_group" "hub-server" {
   name     = "${var.resourcegroups.hub-server}"
+  location = "${var.location}"
+}
+
+resource "azurerm_resource_group" "hub-server-2" {
+  name     = "${var.resourcegroups.hub-server-2}"
   location = "${var.location}"
 }
 
