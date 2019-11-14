@@ -1,0 +1,131 @@
+#!/bin/bash
+
+az network vnet subnet create \
+  --resource-group $rg \
+  --vnet-name vehicleAppVnet  \
+  --name appGatewaySubnet \
+  --address-prefixes 10.0.0.0/24
+
+az network public-ip create \
+  --resource-group $rg \
+  --name appGatewayPublicIp \
+  --sku Standard \
+  --dns-name vehicleapp${RANDOM}
+
+
+
+az network application-gateway create \
+    --resource-group $rg \
+    --name vehicleAppGateway \
+    --sku WAF_v2 \
+    --capacity 2 \
+    --vnet-name vehicleAppVnet \
+    --subnet appGatewaySubnet \
+    --public-ip-address appGatewayPublicIp \
+    --http-settings-protocol Http \
+    --http-settings-port 8080 \
+    --frontend-port 8080
+
+WEBSERVER1IP="$(az vm list-ip-addresses \
+  --resource-group $rg \
+  --name webServer1 \
+  --query [0].virtualMachine.network.privateIpAddresses[0] \
+  --output tsv)"
+
+WEBSERVER2IP="$(az vm list-ip-addresses \
+  --resource-group $rg \
+  --name webserver2 \
+  --query [0].virtualMachine.network.privateIpAddresses[0] \
+  --output tsv)"
+
+
+
+az network application-gateway address-pool create \
+  --gateway-name vehicleAppGateway \
+  --resource-group $rg \
+  --name vmPool \
+  --servers $WEBSERVER1IP $WEBSERVER2IP
+
+az network application-gateway address-pool create \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name appServicePool \
+    --servers $APPSERVICE.azurewebsites.net
+
+az network application-gateway frontend-port create \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name port80 \
+    --port 80
+
+az network application-gateway http-listener create \
+    --resource-group $rg \
+    --name vehicleListener \
+    --frontend-port port80 \
+    --gateway-name vehicleAppGateway
+
+
+
+az network application-gateway probe create \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name customProbe \
+    --path / \
+    --interval 15 \
+    --threshold 3 \
+    --timeout 10 \
+    --protocol Http \
+    --host-name-from-http-settings true
+
+az network application-gateway http-settings update \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name appGatewayBackendHttpSettings \
+    --host-name-from-backend-pool true \
+    --port 80 \
+    --probe customProbe
+
+
+
+
+az network application-gateway url-path-map create \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name urlPathMap \
+    --paths /VehicleRegistration/* \
+    --http-settings appGatewayBackendHttpSettings \
+    --address-pool vmPool
+
+az network application-gateway url-path-map rule create \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name appServiceUrlPathMap \
+    --paths /LicenseRenewal/* \
+    --http-settings appGatewayBackendHttpSettings \
+    --address-pool appServicePool \
+    --path-map-name urlPathMap
+
+az network application-gateway rule create \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name appServiceRule \
+    --http-listener vehicleListener \
+    --rule-type PathBasedRouting \
+    --address-pool appServicePool \
+    --url-path-map urlPathMap
+
+az network application-gateway rule delete \
+    --resource-group $rg \
+    --gateway-name vehicleAppGateway \
+    --name rule1
+
+
+####### TEST APPGW
+
+echo http://$(az network public-ip show \
+  --resource-group $rg \
+  --name appGatewayPublicIp \
+  --query dnsSettings.fqdn \
+  --output tsv)
+
+echo "Access backend pool by appending /LicenseRenewal/Create"

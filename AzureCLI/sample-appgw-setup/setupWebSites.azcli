@@ -1,0 +1,57 @@
+#!/bin/bash
+
+rg="Group-AppGW-Lab"
+location="westeurope"
+
+az group create --name $rg --location $location
+
+az network vnet create \
+  --resource-group $rg \
+  --name vehicleAppVnet \
+  --address-prefix 10.0.0.0/16 \
+  --subnet-name webServerSubnet \
+  --subnet-prefix 10.0.1.0/24
+
+#git clone https://github.com/MicrosoftDocs/mslearn-load-balance-web-traffic-with-application-gateway/ module-files
+
+az vm create \
+  --resource-group $rg \
+  --name webServer1 \
+  --image UbuntuLTS \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --vnet-name vehicleAppVnet \
+  --subnet webServerSubnet \
+  --public-ip-address "" \
+  --nsg "" \
+  --custom-data module-files/scripts/vmconfig.sh \
+  --no-wait
+
+az vm create \
+  --resource-group $rg \
+  --name webServer2 \
+  --image UbuntuLTS \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --vnet-name vehicleAppVnet \
+  --subnet webServerSubnet \
+  --public-ip-address "" \
+  --nsg "" \
+  --custom-data module-files/scripts/vmconfig.sh
+
+
+
+APPSERVICE="licenserenewal$RANDOM"
+
+az appservice plan create \
+    --resource-group $rg \
+    --name vehicleAppServicePlan \
+    --sku S1
+
+az webapp create \
+    --resource-group $rg \
+    --name $APPSERVICE \
+    --plan vehicleAppServicePlan \
+    --runtime "aspnet|v4.7" \
+    --deployment-source-url https://github.com/MicrosoftDocs/mslearn-load-balance-web-traffic-with-application-gateway \
+    --deployment-source-branch appService
