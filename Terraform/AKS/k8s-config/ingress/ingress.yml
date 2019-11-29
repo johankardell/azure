@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx-external
+  name: windows-ingress
+  namespace: windows
+spec:
+  rules:
+    - host: windowsexample.com
+      http:
+        paths:
+          - backend:
+              serviceName: windows-site
+              servicePort: 80
+            path: /
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: windows-site
+  namespace: windows
+spec:
+  type: ClusterIP
+  selector:
+    app: win-webserver
+  ports:
+  -  port: 80
+    
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx-external
+  name: linux-ingress
+  namespace: helloworld
+spec:
+  rules:
+    - host: linuxexample.com
+      http:
+        paths:
+          - backend:
+              serviceName: helloworld-site
+              servicePort: 80
+            path: /
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloworld-site
+  namespace: helloworld
+spec:
+  type: ClusterIP
+  selector:
+    app: helloworld
+  ports:
+  -  port: 80
+    
