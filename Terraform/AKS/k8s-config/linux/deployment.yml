@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: helloworld
+  name: helloworld
+  namespace: helloworld
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: helloworld
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: helloworld
+    spec:
+      containers:
+      - image: johankardell/helloworld
+        name: helloworld
+        ports: 
+        - containerPort: 80
+          name: helloworld
+        resources: {}
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+status: {}
