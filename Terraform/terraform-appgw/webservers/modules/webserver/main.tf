@@ -1,6 +1,6 @@
 locals {
   nicname        = "nic-${var.vm_name}"
-  vmsize         = "Standard_F4s_v2"
+  vmsize         = "Standard_B2ms"
   osdisk_name    = "osdisk-${var.vm_name}"
   admin_username = "johan"
   ssh_key        = file("~/.ssh/id_rsa.pub")
@@ -48,7 +48,7 @@ resource "azurerm_virtual_machine" "web" {
     name              = local.osdisk_name
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
+    managed_disk_type = "Standard_LRS"
   }
 
   storage_image_reference {
