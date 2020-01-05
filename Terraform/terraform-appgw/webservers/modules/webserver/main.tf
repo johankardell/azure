@@ -1,6 +1,6 @@
 locals {
   nicname        = "nic-${var.vm_name}"
-  vmsize         = "Standard_B2ms"
+  vmsize         = "Standard_F4s_v2"
   osdisk_name    = "osdisk-${var.vm_name}"
   admin_username = "johan"
   ssh_key        = file("~/.ssh/id_rsa.pub")
@@ -17,12 +17,12 @@ resource "azurerm_resource_group" "web" {
   location = var.location
 }
 
-resource "azurerm_public_ip" "web" {
-  name                = "pip-web"
-  resource_group_name = azurerm_resource_group.web.name
-  location            = azurerm_resource_group.web.location
-  allocation_method   = "Dynamic"
-}
+# resource "azurerm_public_ip" "web" {
+#   name                = "pip-${var.vm_name}"
+#   resource_group_name = azurerm_resource_group.web.name
+#   location            = azurerm_resource_group.web.location
+#   allocation_method   = "Dynamic"
+# }
 
 resource "azurerm_network_interface" "web" {
   name                = local.nicname
@@ -33,7 +33,7 @@ resource "azurerm_network_interface" "web" {
     name                          = "ipconfiguration"
     subnet_id                     = data.azurerm_subnet.web.id
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = azurerm_public_ip.web.id
+    # public_ip_address_id          = azurerm_public_ip.web.id
   }
 }
 
@@ -48,7 +48,7 @@ resource "azurerm_virtual_machine" "web" {
     name              = local.osdisk_name
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+    managed_disk_type = "Premium_LRS"
   }
 
   storage_image_reference {
@@ -62,7 +62,7 @@ resource "azurerm_virtual_machine" "web" {
   os_profile {
     computer_name  = var.vm_name
     admin_username = local.admin_username
-    custom_data    = file("modules/webserver/scripts/install_apache.sh")
+    custom_data    = file("scripts/install_apache.sh")
 
   }
 
