@@ -1,5 +1,8 @@
+# TODO - Add health probe
+# TODO - Set backend ips dynamically
+# TODO - Change to multi-site configuration
+
 locals {
-  # TODO - Set ip dynamically 
   backendips = ["192.168.0.4", "192.168.0.5"]
 }
 
