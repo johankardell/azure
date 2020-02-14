@@ -8,32 +8,16 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   location            = azurerm_resource_group.cluster.location
   resource_group_name = azurerm_resource_group.cluster.name
   dns_prefix          = "terraform-aks"
-  kubernetes_version  = "1.14.8"
+  kubernetes_version  = "1.15.6"
 
-  agent_pool_profile {
+  default_node_pool {
     name                = "lnx"
-    count               = 3
     vm_size             = "Standard_B4ms"
     enable_auto_scaling = true
     max_count           = 10
     min_count           = 1
     max_pods            = 50
-    os_disk_size_gb     = 250
-    os_type             = "Linux"
-    type                = "VirtualMachineScaleSets"
-    vnet_subnet_id      = azurerm_subnet.aks-01.id
-  }
-
-  agent_pool_profile {
-    name                = "win"
-    count               = 3
-    vm_size             = "Standard_B4ms"
-    enable_auto_scaling = true
-    max_count           = 10
-    min_count           = 1
-    max_pods            = 50
-    os_disk_size_gb     = 250
-    os_type             = "Windows"
+    os_disk_size_gb     = 32
     type                = "VirtualMachineScaleSets"
     vnet_subnet_id      = azurerm_subnet.aks-01.id
   }
@@ -52,4 +36,17 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     network_plugin = "azure"
     network_policy = "calico"
   }
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "win" {
+  name                  = "win"
+  vm_size               = "Standard_B4ms"
+  enable_auto_scaling   = true
+  max_count             = 10
+  min_count             = 1
+  max_pods              = 50
+  os_disk_size_gb       = 64
+  os_type               = "Windows"
+  vnet_subnet_id        = azurerm_subnet.aks-01.id
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.cluster.id
 }
