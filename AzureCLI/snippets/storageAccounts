@@ -1,0 +1,11 @@
+# Storage account snippets
+
+## Queries
+
+Good resource for understanding query language https://www.thorsten-hans.com/master-azure-cli-queries-the-missing-manual/
+
+Get all Azure Datalake v2 enabled storage accounts:
+
+``
+az storage account list --query "[?isHnsEnabled].{name:name}" -o table
+``
