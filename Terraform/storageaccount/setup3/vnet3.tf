@@ -7,10 +7,9 @@ resource "azurerm_virtual_network" "vnet3" {
 
 resource "azurerm_subnet" "subnet" {
   name                 = "default"
-  address_prefix       = "192.168.0.0/24"
+  address_prefixes     = ["192.168.0.0/24"]
   resource_group_name  = azurerm_resource_group.vm3.name
   virtual_network_name = azurerm_virtual_network.vnet3.name
 
-  enforce_private_link_service_network_policies  = false
-  enforce_private_link_endpoint_network_policies = true
+  private_endpoint_network_policies = "Disabled"
 }

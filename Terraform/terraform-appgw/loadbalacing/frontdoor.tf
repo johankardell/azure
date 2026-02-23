@@ -7,49 +7,45 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
-resource "azurerm_frontdoor" "frontdoor" {
-  name                                         = "fd-appgw-sample"
-  location                                     = var.location
-  resource_group_name                          = azurerm_resource_group.rg.name
-  enforce_backend_pools_certificate_name_check = false
+resource "azurerm_cdn_frontdoor_profile" "frontdoor" {
+  name                = "fd-appgw-sample"
+  resource_group_name = azurerm_resource_group.rg.name
+  sku_name            = "Standard_AzureFrontDoor"
+}
 
-  routing_rule {
-    name               = "exampleRoutingRule1"
-    accepted_protocols = ["Http"]
-    patterns_to_match  = ["/*"]
-    frontend_endpoints = ["exampleFrontendEndpoint1"]
+resource "azurerm_cdn_frontdoor_endpoint" "endpoint" {
+  name                     = "fd-appgw-sample-endpoint"
+  cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
+}
 
-    forwarding_configuration {
-      forwarding_protocol           = "HttpOnly"
-      backend_pool_name             = "appgw"
-      cache_use_dynamic_compression = false
-    }
+resource "azurerm_cdn_frontdoor_origin_group" "appgw" {
+  name                     = "appgw"
+  cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
+
+  load_balancing {}
+
+  health_probe {
+    protocol            = "Http"
+    interval_in_seconds = 30
+    path                = "/"
   }
+}
 
-  backend_pool_load_balancing {
-    name = "exampleLoadBalancingSettings1"
-  }
+resource "azurerm_cdn_frontdoor_origin" "appgw" {
+  name                          = "appgw-origin"
+  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.appgw.id
+  host_name                     = data.azurerm_public_ip.appgw.ip_address
+  http_port                     = 80
+  https_port                    = 443
+  enabled                       = true
+}
 
-  backend_pool_health_probe {
-    name = "exampleHealthProbeSetting1"
-  }
-
-  backend_pool {
-    name = "appgw"
-    backend {
-      host_header = "www.frontdoor.com"
-      address     = data.azurerm_public_ip.appgw.ip_address
-      http_port   = 80
-      https_port  = 443
-    }
-
-    load_balancing_name = "exampleLoadBalancingSettings1"
-    health_probe_name   = "exampleHealthProbeSetting1"
-  }
-
-  frontend_endpoint {
-    name                              = "exampleFrontendEndpoint1"
-    host_name                         = "fd-appgw-sample.azurefd.net"
-    custom_https_provisioning_enabled = false
-  }
+resource "azurerm_cdn_frontdoor_route" "route" {
+  name                          = "exampleRoutingRule1"
+  cdn_frontdoor_endpoint_id     = azurerm_cdn_frontdoor_endpoint.endpoint.id
+  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.appgw.id
+  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.appgw.id]
+  supported_protocols           = ["Http"]
+  patterns_to_match             = ["/*"]
+  forwarding_protocol           = "HttpOnly"
 }

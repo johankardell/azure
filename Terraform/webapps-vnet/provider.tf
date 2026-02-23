@@ -1,6 +1,12 @@
-provider "azurerm" {
-  version = "=2.37.0"
-  features {
-
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
   }
+}
+
+provider "azurerm" {
+  features {}
 }

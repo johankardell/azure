@@ -8,36 +8,36 @@ variable "home_ip" {
 }
 
 variable "resourcegroups" {
-  type = map
+  type = map(string)
 }
 
 variable "vnet_hub" {
-  type = map
+  type = map(string)
 }
 
 variable "vnet_spoke" {
-  type = map
+  type = map(string)
 }
 
 variable "vnet_hub_server" {
-  type = map
+  type = map(string)
 }
 variable "vnet_hub_server_2" {
-  type = map
+  type = map(string)
 }
 
 variable "vnet_spoke_server" {
-  type = map
+  type = map(string)
 }
 
 variable "jumphost" {
-  type = map
+  type = map(string)
 }
 
 variable "automationaccount" {
-  type = map
+  type = map(string)
 }
 
 variable "loganalytics" {
-  type = map
+  type = map(string)
 }

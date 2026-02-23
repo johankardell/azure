@@ -8,12 +8,12 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   location            = azurerm_resource_group.cluster.location
   resource_group_name = azurerm_resource_group.cluster.name
   dns_prefix          = "terraform-aks"
-  kubernetes_version  = "1.15.6"
+  kubernetes_version  = "1.30"
 
   default_node_pool {
     name                = "lnx"
     vm_size             = "Standard_B4ms"
-    enable_auto_scaling = true
+    auto_scaling_enabled = true
     max_count           = 10
     min_count           = 1
     max_pods            = 50
@@ -27,9 +27,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     admin_password = var.windows_admin_password
   }
 
-  service_principal {
-    client_id     = var.AKS_CLIENTID
-    client_secret = var.AKS_CLIENTSECRET
+  identity {
+    type = "SystemAssigned"
   }
 
   network_profile {
@@ -41,7 +40,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 resource "azurerm_kubernetes_cluster_node_pool" "win" {
   name                  = "win"
   vm_size               = "Standard_B4ms"
-  enable_auto_scaling   = true
+  auto_scaling_enabled  = true
   max_count             = 10
   min_count             = 1
   max_pods              = 50

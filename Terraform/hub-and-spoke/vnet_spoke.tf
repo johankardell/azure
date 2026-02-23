@@ -11,7 +11,7 @@ resource "azurerm_virtual_network" "spoke" {
 
 resource "azurerm_subnet" "spoke-servernet" {
   name                 = var.vnet_spoke.subnet_servernet_name
-  address_prefix       = var.vnet_spoke.subnet_servernet_iprange
+  address_prefixes     = [var.vnet_spoke.subnet_servernet_iprange]
   resource_group_name  = azurerm_resource_group.net-spoke.name
   virtual_network_name = azurerm_virtual_network.spoke.name
 }

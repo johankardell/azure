@@ -17,13 +17,6 @@ resource "azurerm_resource_group" "web" {
   location = var.location
 }
 
-# resource "azurerm_public_ip" "web" {
-#   name                = "pip-${var.vm_name}"
-#   resource_group_name = azurerm_resource_group.web.name
-#   location            = azurerm_resource_group.web.location
-#   allocation_method   = "Dynamic"
-# }
-
 resource "azurerm_network_interface" "web" {
   name                = local.nicname
   location            = var.location
@@ -32,45 +25,36 @@ resource "azurerm_network_interface" "web" {
   ip_configuration {
     name                          = "ipconfiguration"
     subnet_id                     = data.azurerm_subnet.web.id
-    private_ip_address_allocation = "dynamic"
-    # public_ip_address_id          = azurerm_public_ip.web.id
+    private_ip_address_allocation = "Dynamic"
   }
 }
 
-resource "azurerm_virtual_machine" "web" {
-  name                  = var.vm_name
-  location              = var.location
-  resource_group_name   = var.resource_group_name
-  network_interface_ids = [azurerm_network_interface.web.id]
-  vm_size               = local.vmsize
+resource "azurerm_linux_virtual_machine" "web" {
+  name                            = var.vm_name
+  location                        = var.location
+  resource_group_name             = var.resource_group_name
+  network_interface_ids           = [azurerm_network_interface.web.id]
+  size                            = local.vmsize
+  computer_name                   = var.vm_name
+  admin_username                  = local.admin_username
+  custom_data                     = base64encode(file("scripts/install_apache.sh"))
+  disable_password_authentication = true
 
-  storage_os_disk {
-    name              = local.osdisk_name
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+  admin_ssh_key {
+    username   = local.admin_username
+    public_key = local.ssh_key
   }
 
-  storage_image_reference {
+  os_disk {
+    name                 = local.osdisk_name
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "19.10-DAILY"
+    offer     = "0001-com-ubuntu-server-noble"
+    sku       = "24_04-lts-gen2"
     version   = "latest"
-  }
-
-
-  os_profile {
-    computer_name  = var.vm_name
-    admin_username = local.admin_username
-    custom_data    = file("scripts/install_apache.sh")
-
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-    ssh_keys {
-      key_data = local.ssh_key
-      path     = "/home/${local.admin_username}/.ssh/authorized_keys"
-    }
   }
 }
